@@ -36,7 +36,6 @@ export class Logger {
             }
         } catch (error) {
             console.error('Error logging message:', error);
-            throw error;
         }
     }
 
