@@ -1,6 +1,8 @@
 /**
  * Symmetric key encryption used for encrypting Audio/Video data
  */
+import { cryptoUtils } from './cryptoRSA';
+
 export class AesGcmEncryption {
     private aesKeyLocal?: CryptoKey;
     private aesKeyRemote?: CryptoKey;
@@ -27,17 +29,15 @@ export class AesGcmEncryption {
     }
 
     /**
-     * To Do: 
-     * this key is plain text, can be used to decrypt data.
-     * Should not be transmitted over network.
-     * Use cryptoUtils to encrypt the key and exchange.
+     * The AES key is now encrypted before transmission.
      */
-    public async getRawAesKeyToExport(): Promise<string> {
+    public async getRawAesKeyToExport(publicKey: string): Promise<string> {
         if(!this.aesKeyLocal) {
             throw new Error('AES key not generated');
         }
         const jsonWebKey = await crypto.subtle.exportKey("jwk", this.aesKeyLocal);
-        return JSON.stringify(jsonWebKey);
+        const aesKeyString = JSON.stringify(jsonWebKey);
+        return cryptoUtils.encryptMessage(aesKeyString, publicKey);
     }
 
     public async setRemoteAesKey(key: string): Promise<void> {

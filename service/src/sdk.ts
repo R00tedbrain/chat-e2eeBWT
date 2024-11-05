@@ -145,9 +145,10 @@ class ChatE2EE implements IChatE2EE {
         this.channelId = channelId;
         this.userId = userId;
 
-        const aesPlain = await this.symEncryption.getRawAesKeyToExport();
+        const aesPlain = await this.symEncryption.getRawAesKeyToExport(this.publicKey);
+        const encryptedAesKey = await _cryptoUtils.encryptMessage(aesPlain, this.publicKey);
 
-        await sharePublicKey({ aesKey: aesPlain, publicKey: this.publicKey, sender: this.userId, channelId: this.channelId});
+        await sharePublicKey({ aesKey: encryptedAesKey, publicKey: this.publicKey, sender: this.userId, channelId: this.channelId});
         this.socket.joinChat({ publicKey: this.publicKey, userID: this.userId, channelID: this.channelId})
         await this.getPublicKey(logger);
         return;
