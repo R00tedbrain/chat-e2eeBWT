@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client"; // P36ce
 // import styles from '@Style.module.css';
 import styles from "./Style.module.css";
 
@@ -28,9 +28,10 @@ const App = () => {
   );
 };
 
-ReactDOM.render(
+const container = document.getElementById("root");
+const root = createRoot(container!); // P4673
+root.render(
   <ThemeProvider>
     <App />
-  </ThemeProvider>,
-  document.getElementById("root")
+  </ThemeProvider>
 );
