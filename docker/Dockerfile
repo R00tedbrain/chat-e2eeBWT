@@ -4,7 +4,7 @@ WORKDIR /chat-e2ee
 # todo break apart client and server dep installs/builds so that they can be cached b/w builds
 COPY . /chat-e2ee/ 
 
-RUN npm install 
+RUN npm install -g npm@10.9.0
 
 RUN npm run build
 
