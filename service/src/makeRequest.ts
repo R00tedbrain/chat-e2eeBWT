@@ -1,4 +1,5 @@
 import { configContext } from "./configContext";
+import { Logger } from "./utils/logger";
 
 type CustomError = Error & {
   status: number
@@ -11,6 +12,7 @@ const getBaseURL = (): string => {
 }
 
 const makeRequest = async (url: string, { method = 'GET', body }: { method: string, body?: any }) => {
+  const logger = new Logger('makeRequest');
   const res = await window.fetch(`${getBaseURL()}/api/${url}`, {
     method,
     headers: {
@@ -26,6 +28,10 @@ const makeRequest = async (url: string, { method = 'GET', body }: { method: stri
 
     const err = new Error(json.message || json.error || JSON.stringify(json)) as CustomError;
     err.status = res.status;
+
+    if (err.message.includes('OperationError')) {
+      logger.log('OperationError occurred:', err.message);
+    }
 
     throw err;
   }
