@@ -28,10 +28,15 @@ export class Logger {
             // set disableLog: false in configContext to enable logs
             return;
         }
-        if(this.counter) {
-            console.log(`${this.logTitle}$${this.counter}`, ...args);
-        }else {
-            console.log(`${this.logTitle}`, ...args);
+        try {
+            if(this.counter) {
+                console.log(`${this.logTitle}$${this.counter}`, ...args);
+            }else {
+                console.log(`${this.logTitle}`, ...args);
+            }
+        } catch (error) {
+            console.error('Error logging message:', error);
+            throw error;
         }
     }
 

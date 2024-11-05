@@ -252,11 +252,16 @@ class ChatE2EE implements IChatE2EE {
     //get receiver public key
     private async getPublicKey(logger: Logger): Promise<void> {
         logger.log(`getPublicKey()`);
-        const receiverPublicKey = await getPublicKey({ userId: this.userId, channelId: this.channelId });
-        logger.log(`setPublicKey() - ${!!receiverPublicKey?.publicKey}`);
-        this.receiverPublicKey = receiverPublicKey?.publicKey;
-        if(receiverPublicKey.aesKey) {
-            await this.symEncryption.setRemoteAesKey(receiverPublicKey.aesKey)
+        try {
+            const receiverPublicKey = await getPublicKey({ userId: this.userId, channelId: this.channelId });
+            logger.log(`setPublicKey() - ${!!receiverPublicKey?.publicKey}`);
+            this.receiverPublicKey = receiverPublicKey?.publicKey;
+            if(receiverPublicKey.aesKey) {
+                await this.symEncryption.setRemoteAesKey(receiverPublicKey.aesKey)
+            }
+        } catch (error) {
+            logger.log('Error getting public key:', error);
+            throw error;
         }
         return;
     }
@@ -280,7 +285,7 @@ class ChatE2EE implements IChatE2EE {
             this.channelId, 
             this.callLogger,
         );
-        this.setupCallSubs(this.call)
+        this.setupCallSubs(this.call);
         return this.call;
     }
 }
