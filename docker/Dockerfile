@@ -1,4 +1,4 @@
-FROM node:lts-alpine as BUILD
+FROM node:lts-alpine:16.13.0 as BUILD
 
 WORKDIR /chat-e2ee
 # todo break apart client and server dep installs/builds so that they can be cached b/w builds
@@ -10,7 +10,7 @@ RUN npm run build
 
 # todo - multi part build (lets us slim down container to not unclude all the webpack stuff)
 
-FROM node:lts-alpine
+FROM node:lts-alpine:16.13.0
 
 WORKDIR /chat-e2ee
 COPY package*.json /chat-e2ee/
